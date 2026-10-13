@@ -78,7 +78,7 @@ export function Header() {
             href="/contact"
             className="group relative inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-zinc-900 dark:bg-emerald-600 hover:bg-emerald-600 dark:hover:bg-emerald-500 shadow-sm transition-all duration-300 hover:shadow-emerald-500/25 hover:shadow-lg active:scale-95"
           >
-            <span>Обсудить проект</span>
+            <span>Обсудить проект1</span>
             <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
