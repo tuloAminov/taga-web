@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 90" width="380" height="90" fill="none">
+  <!-- Вариант 3: Острая кибернетическая "Т" (Cyber-Cut / Скошенные грани) -->
+  <g transform="translate(15, 15)">
+    <!-- Индиго сквиркл -->
+    <rect width="60" height="60" rx="16" fill="#4F46E5" />
+    
+    <!-- Т со скошенными углами в стиле современной кибер-типографики -->
+    <path d="M12 25 L19 18 H48 V26 H35 V48 L27 48 V26 H12 Z" fill="#FFFFFF" />
+    <!-- Отражающая грань среза -->
+    <polygon points="48,18 48,26 40,18" fill="#EEF2FF" />
+  </g>
+
+  <!-- Текст на кириллице -->
+  <text x="105" y="52" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif" font-size="36" font-weight="800" fill="#111827" letter-spacing="0.05em">ТАГА</text>
+  <text x="107" y="68" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#4F46E5" letter-spacing="0.28em">IT-СТУДИЯ</text>
+</svg>
