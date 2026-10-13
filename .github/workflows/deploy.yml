@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Restore Next.js build cache
@@ -35,7 +35,7 @@ jobs:
       - name: Build static site
         run: npm run build
 
-      - name: Deploy to Beget via FTPS (Zero Downtime)
+      - name: Deploy to Beget via FTPS
         env:
           FTP_HOST: t92401ab.beget.tech
           FTP_USER: t92401ab_taga

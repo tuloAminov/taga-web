@@ -15,7 +15,7 @@ if (typeof process.loadEnvFile === "function") {
 
 async function deploy() {
   const client = new ftp.Client();
-  client.ftp.verbose = false; // Отключаем избыточный вывод для ускорения
+  client.ftp.verbose = false;
 
   const host = process.env.FTP_HOST || "t92401ab.beget.tech";
   const user = process.env.FTP_USER || "t92401ab_taga";
@@ -28,12 +28,9 @@ async function deploy() {
   }
 
   const localDir = path.resolve(__dirname, "out");
-  const tempDir = "/public_html_new";
-  const targetDir = "/public_html";
-  const backupDir = "/public_html_old";
 
   try {
-    console.log(`[1/4] Подключение к ${host}...`);
+    console.log(`[1/3] Подключение к ${host}...`);
     await client.access({
       host,
       user,
@@ -45,46 +42,21 @@ async function deploy() {
       }
     });
 
-    // Очищаем старые временные папки, если они остались от предыдущих сбоев
-    try { await client.removeDir(tempDir); } catch {}
-    try { await client.removeDir(backupDir); } catch {}
+    // Очищаем случайные временные папки от прошлых сбоев, если они есть
+    try { await client.removeDir("/public_html_new"); } catch {}
+    try { await client.removeDir("/public_html_old"); } catch {}
 
-    console.log(`[2/4] Загрузка файлов в ${tempDir}... (Текущий сайт продолжает работать без простоя)`);
-    await client.ensureDir(tempDir);
-    await client.uploadFromDir(localDir, tempDir);
+    console.log(`[2/3] Загрузка обновлений в /public_html (без удаления старых файлов, сайт работает)...`);
+    await client.ensureDir("/public_html");
+    await client.cd("/public_html");
 
-    console.log(`[3/4] Мгновенное переключение версии (Zero Downtime)...`);
-    const rootList = await client.list("/");
-    const targetExists = rootList.some(item => item.name === "public_html");
+    // Загружаем новые файлы поверх существующих — сайт не прерывает работу
+    await client.uploadFromDir(localDir);
 
-    if (targetExists) {
-      await client.rename(targetDir, backupDir);
-    }
-    await client.rename(tempDir, targetDir);
-    console.log("Новая версия успешно активирована!");
-
-    console.log(`[4/4] Фоновое удаление старой версии...`);
-    if (targetExists) {
-      try {
-        await client.removeDir(backupDir);
-      } catch (err) {
-        console.warn("Предупреждение при очистке старой версии:", err.message);
-      }
-    }
-
+    console.log(`[3/3] Файлы успешно обновлены!`);
     console.log("Деплой на Beget завершён успешно (простой сайта = 0 секунд)");
   } catch (err) {
     console.error("Ошибка при деплое:", err);
-    // Откат в случае сбоя переименования
-    try {
-      const rootList = await client.list("/");
-      const hasBackup = rootList.some(item => item.name === "public_html_old");
-      const hasTarget = rootList.some(item => item.name === "public_html");
-      if (hasBackup && !hasTarget) {
-        await client.rename(backupDir, targetDir);
-        console.log("Откат к предыдущей версии выполнен успешно.");
-      }
-    } catch {}
     throw err;
   } finally {
     client.close();
